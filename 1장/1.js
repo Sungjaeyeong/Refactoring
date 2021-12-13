@@ -73,21 +73,16 @@ function createStatementData(invoice, plays) {
   return result;
 
   function enrichPerformance(aPerformance) {
-    const calculator = new PerformanceCalculator(aPerformance, playFor(result)); // 공연 정보를 계산기로 전달
+    const calculator = new PerformanceCalculator(aPerformance, playFor(result));
     const result = Object.assign({}, aPerformance); // 얕은 복사 수행
     result.play = calculator.play;
-    result.amount = amountFor(result);
+    result.amount = calculator.amount;
     result.volumeCredits = volumeCreditsFor(result);
     return result;
   }
 
   function playFor(aPerformance) {
     return plays[aPerformance.playID];
-  }
-
-  function amountFor(aPerformance) {
-    return new PerformanceCalculator(aPerformance, playFor(aPerformance))
-      .amount;
   }
 
   function volumeCreditsFor(aPerformance) {
@@ -117,12 +112,9 @@ class PerformanceCalculator {
     this.play = aPlay;
   }
 
-  // amountFor() 함수의 코드를 계산기 클래스로 복사
   get amount() {
     let result = 0;
-    switch (
-      this.play.type // amountFor() 함수가 매개변수로 받던 정보를 계산기 필드에서 바로 얻음
-    ) {
+    switch (this.play.type) {
       case "tragedy": // 비극
         result = 40000;
         if (this.performance.audience > 30) {
