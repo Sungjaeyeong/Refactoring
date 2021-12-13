@@ -73,7 +73,10 @@ function createStatementData(invoice, plays) {
   return result;
 
   function enrichPerformance(aPerformance) {
-    const calculator = new PerformanceCalculator(aPerformance, playFor(result));
+    const calculator = createPerformanceCalculator(
+      aPerformance,
+      playFor(result)
+    );
     const result = Object.assign({}, aPerformance); // 얕은 복사 수행
     result.play = calculator.play;
     result.amount = calculator.amount;
@@ -131,4 +134,8 @@ class PerformanceCalculator {
       result += Math.floor(this.performance.audience / 5);
     return result;
   }
+}
+
+function createPerformanceCalculator(aPerformance, aPlay) {
+  return new PerformanceCalculator(aPerformance, aPlay);
 }
