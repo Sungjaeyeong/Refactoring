@@ -27,8 +27,18 @@ const invoice = [
 function statement(invoice, plays) {
   const statementData = {};
   statementData.customer = invoice.customer;
-  statementData.performances = invoice.performances;
+  statementData.performances = invoice.performances.map(enrichPerformance);
   return renderPlainText(statementData, plays);
+
+  function enrichPerformance(aPerformance) {
+    const result = Object.assign({}, aPerformance); // 얕은 복사 수행
+    result.play = playFor(result);
+    return result;
+  }
+
+  function playFor(aPerformance) {
+    return plays[aPerformance.playID];
+  }
 }
 
 function renderPlainText(data, plays) {
@@ -58,10 +68,6 @@ function renderPlainText(data, plays) {
     if ("comedy" === playFor(perf).type)
       result += Math.floor(perf.audience / 5);
     return result;
-  }
-
-  function playFor(aPerformance) {
-    return plays[aPerformance.playID];
   }
 
   function amountFor(aPerformance) {
